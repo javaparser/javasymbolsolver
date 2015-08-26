@@ -1,7 +1,7 @@
 package me.tomassetti.symbolsolver.model.reflection;
 
 import com.github.javaparser.ast.Node;
-import me.tomassetti.symbolsolver.JavaParserFacade;
+
 import me.tomassetti.symbolsolver.model.*;
 import me.tomassetti.symbolsolver.model.declarations.*;
 import me.tomassetti.symbolsolver.model.javaparser.UnsolvedSymbolException;
@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
-import java.util.LinkedList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -84,9 +84,7 @@ public class ReflectionClassDeclaration implements ClassDeclaration {
 
     @Override
     public TypeUsage getUsage(Node node) {
-        for (TypeParameter tp : this.getTypeParameters()){
-            throw new UnsupportedOperationException("Find parameters of "+this+" in "+node);
-        }
+        
         return new TypeUsageOfTypeDeclaration(this);
     }
 
