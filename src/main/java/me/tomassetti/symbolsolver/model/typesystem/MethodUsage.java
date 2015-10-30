@@ -104,7 +104,7 @@ public class MethodUsage {
                 return typeToBeExamined;
             }
         }
-        int i = 0;
+        
         
         return typeToBeExamined;
     }

@@ -11,19 +11,19 @@ import java.util.List;
  */
 public interface InterfaceDeclaration extends TypeDeclaration, TypeParametrized {
 
-    @Override
-    default boolean isInterface() {
-        return true;
-    }
+  @Override
+  default boolean isInterface() {
+    return true;
+  }
 
-    List<InterfaceDeclaration> getInterfacesExtended(TypeSolver typeSolver);
+  List<InterfaceDeclaration> getInterfacesExtended(TypeSolver typeSolver);
 
-    default List<InterfaceDeclaration> getAllInterfacesExtended(TypeSolver typeSolver) {
-        List<InterfaceDeclaration> interfaces = new ArrayList<>();
-        for (InterfaceDeclaration interfaceDeclaration : getInterfacesExtended(typeSolver)) {
-            interfaces.add(interfaceDeclaration);
-            interfaces.addAll(interfaceDeclaration.getAllInterfacesExtended(typeSolver));
-        }
-        return interfaces;
+  default List<InterfaceDeclaration> getAllInterfacesExtended(TypeSolver typeSolver) {
+    List<InterfaceDeclaration> interfaces = new ArrayList<>();
+    for (InterfaceDeclaration interfaceDeclaration : getInterfacesExtended(typeSolver)) {
+      interfaces.add(interfaceDeclaration);
+      interfaces.addAll(interfaceDeclaration.getAllInterfacesExtended(typeSolver));
     }
+    return interfaces;
+  }
 }

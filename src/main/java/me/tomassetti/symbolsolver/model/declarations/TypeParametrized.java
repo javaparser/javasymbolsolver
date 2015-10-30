@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface TypeParametrized {
 
-    public List<TypeParameter> getTypeParameters();
+  public List<TypeParameter> getTypeParameters();
 
 }

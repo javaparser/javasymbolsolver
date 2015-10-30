@@ -7,19 +7,19 @@ import me.tomassetti.symbolsolver.resolution.Context;
  */
 public class UnsolvedTypeException extends RuntimeException {
 
-    private Context context;
-    private String name;
+  private Context context;
+  private String name;
 
-    @Override
-    public String toString() {
-        return "UnsolvedTypeException{" +
-                "context=" + context +
-                ", name='" + name + '\'' +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "UnsolvedTypeException{" 
+    + "context=" + context 
+    + ", name='" + name + '\'' 
+    + '}';
+  }
 
-    public UnsolvedTypeException(Context context, String name) {
-        this.context = context;
-        this.name = name;
-    }
+  public UnsolvedTypeException(Context context, String name) {
+    this.context = context;
+    this.name = name;
+  }
 }

@@ -17,29 +17,29 @@ import java.util.List;
  */
 public class ForechStatementContext extends AbstractJavaParserContext<ForeachStmt> {
 
-    public ForechStatementContext(ForeachStmt wrappedNode) {
-        super(wrappedNode);
-    }
+  public ForechStatementContext(ForeachStmt wrappedNode) {
+    super(wrappedNode);
+  }
 
-    @Override
-    public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
-        if (wrappedNode.getVariable().getVars().size() != 1) {
-            throw new IllegalStateException();
-        }
-        VariableDeclarator variableDeclarator = wrappedNode.getVariable().getVars().get(0);
-        if (variableDeclarator.getId().getName().equals(name)) {
-            return SymbolReference.solved(JavaParserSymbolDeclaration.localVar(variableDeclarator, typeSolver));
-        } else {
-            if (wrappedNode.getParentNode() instanceof BlockStmt) {
-                return StatementContext.solveInBlock(name, typeSolver, wrappedNode);
-            } else {
-                return getParent().solveSymbol(name, typeSolver);
-            }
-        }
+  @Override
+  public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
+    if (wrappedNode.getVariable().getVars().size() != 1) {
+      throw new IllegalStateException();
     }
+    VariableDeclarator variableDeclarator = wrappedNode.getVariable().getVars().get(0);
+    if (variableDeclarator.getId().getName().equals(name)) {
+      return SymbolReference.solved(JavaParserSymbolDeclaration.localVar(variableDeclarator, typeSolver));
+    } else {
+      if (wrappedNode.getParentNode() instanceof BlockStmt) {
+        return StatementContext.solveInBlock(name, typeSolver, wrappedNode);
+      } else {
+        return getParent().solveSymbol(name, typeSolver);
+      }
+    }
+  }
 
-    @Override
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
-        return getParent().solveMethod(name, parameterTypes, typeSolver);
-    }
+  @Override
+  public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
+    return getParent().solveMethod(name, parameterTypes, typeSolver);
+  }
 }

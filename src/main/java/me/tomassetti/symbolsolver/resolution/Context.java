@@ -15,55 +15,55 @@ import java.util.Optional;
  */
 public interface Context {
 
-    public Context getParent();
+  public Context getParent();
 
-    /* Type resolution */
+  /* Type resolution */
 
-    default Optional<TypeUsage> solveGenericType(String name, TypeSolver typeSolver) {
-        return Optional.empty();
+  default Optional<TypeUsage> solveGenericType(String name, TypeSolver typeSolver) {
+    return Optional.empty();
+  }
+
+  default SymbolReference<TypeDeclaration> solveType(String name, TypeSolver typeSolver) {
+    Context parent = getParent();
+    if (parent == null) {
+      return SymbolReference.unsolved(TypeDeclaration.class);
+    } else {
+      return getParent().solveType(name, typeSolver);
     }
+  }
 
-    default SymbolReference<TypeDeclaration> solveType(String name, TypeSolver typeSolver) {
-        Context parent = getParent();
-        if (parent == null) {
-            return SymbolReference.unsolved(TypeDeclaration.class);
-        } else {
-            return getParent().solveType(name, typeSolver);
-        }
+  /* Symbol resolution */
+
+  public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver);
+
+  default Optional<Value> solveSymbolAsValue(String name, TypeSolver typeSolver) {
+    SymbolReference<? extends ValueDeclaration> ref = solveSymbol(name, typeSolver);
+    if (ref.isSolved()) {
+      Value value = Value.from(ref.getCorrespondingDeclaration(), typeSolver);
+      return Optional.of(value);
+    } else {
+      return Optional.empty();
     }
+  }
 
-    /* Symbol resolution */
+  /* Methods resolution */
 
-    public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver);
-
-    default Optional<Value> solveSymbolAsValue(String name, TypeSolver typeSolver) {
-        SymbolReference<? extends ValueDeclaration> ref = solveSymbol(name, typeSolver);
-        if (ref.isSolved()) {
-            Value value = Value.from(ref.getCorrespondingDeclaration(), typeSolver);
-            return Optional.of(value);
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    /* Methods resolution */
-
-    /**
+  /**
      * We find the method declaration which is the best match for the given name and list of parameters.
      */
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver);
+  public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver);
 
-    /**
+  /**
      * Similar to solveMethod but we return a MethodUsage. A MethodUsage corresponds to a MethodDeclaration plus the
      * resolved type variables.
      */
-    public default Optional<MethodUsage> solveMethodAsUsage(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
-        SymbolReference<MethodDeclaration> methodSolved = solveMethod(name, parameterTypes, typeSolver);
-        if (methodSolved.isSolved()) {
-            MethodDeclaration methodDeclaration = methodSolved.getCorrespondingDeclaration();
-            return Optional.of(methodDeclaration.resolveTypeVariables(this, typeSolver, parameterTypes));
-        } else {
-            return Optional.empty();
-        }
+  public default Optional<MethodUsage> solveMethodAsUsage(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
+    SymbolReference<MethodDeclaration> methodSolved = solveMethod(name, parameterTypes, typeSolver);
+    if (methodSolved.isSolved()) {
+      MethodDeclaration methodDeclaration = methodSolved.getCorrespondingDeclaration();
+      return Optional.of(methodDeclaration.resolveTypeVariables(this, typeSolver, parameterTypes));
+    } else {
+      return Optional.empty();
     }
+  }
 }

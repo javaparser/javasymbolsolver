@@ -8,6 +8,6 @@ import me.tomassetti.symbolsolver.model.typesystem.TypeUsage;
  */
 public interface ValueDeclaration extends Declaration {
 
-    TypeUsage getType(TypeSolver typeSolver);
+  TypeUsage getType(TypeSolver typeSolver);
 
 }

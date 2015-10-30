@@ -5,14 +5,14 @@ package me.tomassetti.symbolsolver.model.declarations;
  */
 public interface FieldDeclaration extends ValueDeclaration {
 
-    @Override
-    default boolean isField() {
-        return true;
-    }
+  @Override
+  default boolean isField() {
+    return true;
+  }
 
-    @Override
-    default FieldDeclaration asField() {
-        return this;
-    }
-    
+  @Override
+  default FieldDeclaration asField() {
+    return this;
+  }
+
 }

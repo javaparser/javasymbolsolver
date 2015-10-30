@@ -12,40 +12,40 @@ import java.lang.reflect.Field;
  */
 public class ReflectionFieldDeclaration implements FieldDeclaration {
 
-    public ReflectionFieldDeclaration(Field field) {
-        this.field = field;
-    }
+  public ReflectionFieldDeclaration(Field field) {
+    this.field = field;
+  }
 
-    private Field field;
+  private Field field;
 
-    @Override
-    public TypeUsage getType(TypeSolver typeSolver) {
-        // TODO consider interfaces, enums, primitive types, arrays
-        return ReflectionFactory.typeUsageFor(field.getType());
-    }
+  @Override
+  public TypeUsage getType(TypeSolver typeSolver) {
+    // TODO consider interfaces, enums, primitive types, arrays
+    return ReflectionFactory.typeUsageFor(field.getType());
+  }
 
-    @Override
-    public String getName() {
-        return field.getName();
-    }
+  @Override
+  public String getName() {
+    return field.getName();
+  }
 
-    @Override
-    public boolean isField() {
-        return true;
-    }
+  @Override
+  public boolean isField() {
+    return true;
+  }
 
-    @Override
-    public boolean isParameter() {
-        return false;
-    }
+  @Override
+  public boolean isParameter() {
+    return false;
+  }
 
-    @Override
-    public boolean isVariable() {
-        return false;
-    }
+  @Override
+  public boolean isVariable() {
+    return false;
+  }
 
-    @Override
-    public boolean isType() {
-        return false;
-    }
+  @Override
+  public boolean isType() {
+    return false;
+  }
 }

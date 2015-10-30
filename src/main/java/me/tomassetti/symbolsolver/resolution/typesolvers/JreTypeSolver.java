@@ -12,22 +12,22 @@ import me.tomassetti.symbolsolver.resolution.reflection.ReflectionInterfaceDecla
  */
 public class JreTypeSolver implements TypeSolver {
 
-    @Override
-    public SymbolReference<TypeDeclaration> tryToSolveType(String name) {
-        if (name.startsWith("java.") || name.startsWith("javax.")) {
-            try {
-                Class<?> clazz = JreTypeSolver.class.getClassLoader().loadClass(name);
-                if (clazz.isInterface()) {
-                    return SymbolReference.solved(new ReflectionInterfaceDeclaration(clazz));
-                } else {
-                    return SymbolReference.solved(new ReflectionClassDeclaration(clazz));
-                }
-            } catch (ClassNotFoundException e){
-                return SymbolReference.unsolved(TypeDeclaration.class);
-            }
+  @Override
+  public SymbolReference<TypeDeclaration> tryToSolveType(String name) {
+    if (name.startsWith("java.") || name.startsWith("javax.")) {
+      try {
+        Class<?> clazz = JreTypeSolver.class.getClassLoader().loadClass(name);
+        if (clazz.isInterface()) {
+          return SymbolReference.solved(new ReflectionInterfaceDeclaration(clazz));
         } else {
-            return SymbolReference.unsolved(TypeDeclaration.class);
+          return SymbolReference.solved(new ReflectionClassDeclaration(clazz));
         }
+      } catch (ClassNotFoundException e) {
+        return SymbolReference.unsolved(TypeDeclaration.class);
+      }
+    } else {
+      return SymbolReference.unsolved(TypeDeclaration.class);
     }
+  }
 
 }

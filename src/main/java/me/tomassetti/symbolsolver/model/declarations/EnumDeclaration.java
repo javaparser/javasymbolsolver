@@ -5,8 +5,8 @@ package me.tomassetti.symbolsolver.model.declarations;
  */
 public interface EnumDeclaration extends TypeDeclaration {
 
-    @Override
-    default boolean isEnum() {
-        return true;
-    }
+  @Override
+  default boolean isEnum() {
+    return true;
+  }
 }

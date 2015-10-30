@@ -17,21 +17,18 @@ import java.util.stream.Collectors;
 public class VariableSymbolDeclarator extends AbstractSymbolDeclarator<VariableDeclarationExpr> {
 
 
-    public VariableSymbolDeclarator(VariableDeclarationExpr wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-    }
+  public VariableSymbolDeclarator(VariableDeclarationExpr wrappedNode, TypeSolver typeSolver) {
+    super(wrappedNode, typeSolver);
+  }
 
-    @Override
-    public List<ValueDeclaration> getSymbolDeclarations() {
-        List<ValueDeclaration> symbols = wrappedNode.getVars().stream().map(
-                v -> JavaParserSymbolDeclaration.field(v, typeSolver)
-        ).collect(
-                Collectors.toCollection(() -> new LinkedList<>()));
-        return symbols;
-    }
+  @Override
+  public List<ValueDeclaration> getSymbolDeclarations() {
+    List<ValueDeclaration> symbols = wrappedNode.getVars().stream().map( v->JavaParserSymbolDeclaration.field(v, typeSolver)).collect(Collectors.toCollection(()->new LinkedList<>()));
+    return symbols;
+  }
 
-    @Override
-    public List<MethodDeclaration> getMethodDeclarations() {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<MethodDeclaration> getMethodDeclarations() {
+    return Collections.emptyList();
+  }
 }

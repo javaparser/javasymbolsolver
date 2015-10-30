@@ -12,24 +12,24 @@ import java.util.List;
  */
 public interface MethodDeclaration extends Declaration, TypeParametrized {
 
-    /**
+  /**
      * The type in which the method is declared.
      * @return
      */
-    TypeDeclaration declaringType();
+  TypeDeclaration declaringType();
 
-    TypeUsage getReturnType(TypeSolver typeSolver);
+  TypeUsage getReturnType(TypeSolver typeSolver);
 
-    int getNoParams();
+  int getNoParams();
 
-    ParameterDeclaration getParam(int i);
+  ParameterDeclaration getParam(int i);
 
-    /**
+  /**
      * Create the MethodUsage corresponding to this declaration with all generic types solved in the given
      * context.
      */
-    @Deprecated
-    MethodUsage resolveTypeVariables(Context context, TypeSolver typeSolver, List<TypeUsage> parameterTypes);
+  @Deprecated
+  MethodUsage resolveTypeVariables(Context context, TypeSolver typeSolver, List<TypeUsage> parameterTypes);
 
-    Context getContext();
+  Context getContext();
 }

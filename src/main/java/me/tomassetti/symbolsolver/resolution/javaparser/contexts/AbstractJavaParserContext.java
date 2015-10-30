@@ -16,77 +16,77 @@ import java.util.Optional;
  */
 public abstract class AbstractJavaParserContext<N extends Node> implements Context {
 
-    protected N wrappedNode;
+  protected N wrappedNode;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-        AbstractJavaParserContext that = (AbstractJavaParserContext) o;
+    AbstractJavaParserContext that = (AbstractJavaParserContext) o;
 
-        if (wrappedNode != null ? !wrappedNode.equals(that.wrappedNode) : that.wrappedNode != null) return false;
+    if (wrappedNode != null ? !wrappedNode.equals(that.wrappedNode) : that.wrappedNode != null) return false;
 
-        return true;
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return wrappedNode != null ? wrappedNode.hashCode() : 0;
+  }
+
+  @Override
+  public Optional<TypeUsage> solveGenericType(String name, TypeSolver typeSolver) {
+    Context parent = getParent();
+    if (parent == null) {
+      return Optional.empty();
+    } else {
+      return parent.solveGenericType(name, typeSolver);
     }
+  }
 
-    @Override
-    public int hashCode() {
-        return wrappedNode != null ? wrappedNode.hashCode() : 0;
+  public AbstractJavaParserContext(N wrappedNode) {
+    if (wrappedNode == null) {
+      throw new NullPointerException();
     }
+    this.wrappedNode = wrappedNode;
+  }
 
-    @Override
-    public Optional<TypeUsage> solveGenericType(String name, TypeSolver typeSolver) {
-        Context parent = getParent();
-        if (parent == null) {
-            return Optional.empty();
-        } else {
-            return parent.solveGenericType(name, typeSolver);
+  protected static final SymbolReference<ValueDeclaration> solveWith(SymbolDeclarator symbolDeclarator, String name) {
+    for (ValueDeclaration decl : symbolDeclarator.getSymbolDeclarations()) {
+      if (decl.getName().equals(name)) {
+        return SymbolReference.solved(decl);
+      }
+    }
+    return SymbolReference.unsolved(ValueDeclaration.class);
+  }
+
+  protected Optional<Value> solveWithAsValue(SymbolDeclarator symbolDeclarator, String name, TypeSolver typeSolver) {
+    for (ValueDeclaration decl : symbolDeclarator.getSymbolDeclarations()) {
+      if (decl.getName().equals(name)) {
+        return Optional.of(Value.from(decl, typeSolver));
+      }
+    }
+    return Optional.empty();
+  }
+
+  @Override
+  public final Context getParent() {
+    if (wrappedNode.getParentNode() instanceof MethodCallExpr) {
+      MethodCallExpr parentCall = (MethodCallExpr) wrappedNode.getParentNode();
+      boolean found = false;
+      if (parentCall.getArgs() != null) {
+        for (Expression expression : parentCall.getArgs()) {
+          if (expression == wrappedNode) {
+            found = true;
+          }
         }
+      }
+      if (found) {
+        return JavaParserFactory.getContext(wrappedNode.getParentNode().getParentNode());
+      }
     }
-
-    public AbstractJavaParserContext(N wrappedNode) {
-        if (wrappedNode ==  null) {
-            throw new NullPointerException();
-        }
-        this.wrappedNode = wrappedNode;
-    }
-
-    protected static final SymbolReference<ValueDeclaration> solveWith(SymbolDeclarator symbolDeclarator, String name){
-        for (ValueDeclaration decl : symbolDeclarator.getSymbolDeclarations()){
-            if (decl.getName().equals(name)){
-                return SymbolReference.solved(decl);
-            }
-        }
-        return SymbolReference.unsolved(ValueDeclaration.class);
-    }
-
-    protected Optional<Value> solveWithAsValue(SymbolDeclarator symbolDeclarator, String name, TypeSolver typeSolver){
-        for (ValueDeclaration decl : symbolDeclarator.getSymbolDeclarations()){
-            if (decl.getName().equals(name)){
-                return Optional.of(Value.from(decl, typeSolver));
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public final Context getParent() {
-        if (wrappedNode.getParentNode() instanceof MethodCallExpr) {
-            MethodCallExpr parentCall = (MethodCallExpr)wrappedNode.getParentNode();
-            boolean found = false;
-            if (parentCall.getArgs() != null) {
-                for (Expression expression : parentCall.getArgs()) {
-                    if (expression == wrappedNode) {
-                        found = true;
-                    }
-                }
-            }
-            if (found) {
-                return JavaParserFactory.getContext(wrappedNode.getParentNode().getParentNode());
-            }
-        }
-        return JavaParserFactory.getContext(wrappedNode.getParentNode());
-    }
+    return JavaParserFactory.getContext(wrappedNode.getParentNode());
+  }
 
 }

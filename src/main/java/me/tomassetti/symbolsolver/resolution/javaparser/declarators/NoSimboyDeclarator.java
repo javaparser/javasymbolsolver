@@ -13,17 +13,17 @@ import java.util.List;
  */
 public class NoSimboyDeclarator<N extends Node> extends AbstractSymbolDeclarator<N> {
 
-    public NoSimboyDeclarator(N wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-    }
+  public NoSimboyDeclarator(N wrappedNode, TypeSolver typeSolver) {
+    super(wrappedNode, typeSolver);
+  }
 
-    @Override
-    public List<ValueDeclaration> getSymbolDeclarations() {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<ValueDeclaration> getSymbolDeclarations() {
+    return Collections.emptyList();
+  }
 
-    @Override
-    public List<MethodDeclaration> getMethodDeclarations() {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<MethodDeclaration> getMethodDeclarations() {
+    return Collections.emptyList();
+  }
 }

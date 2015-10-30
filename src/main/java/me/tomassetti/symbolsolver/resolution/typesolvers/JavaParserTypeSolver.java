@@ -22,44 +22,44 @@ import java.util.Optional;
  */
 public class JavaParserTypeSolver implements TypeSolver {
 
-    private File srcDir;
+  private File srcDir;
 
-    public JavaParserTypeSolver(File srcDir) {
-        this.srcDir = srcDir;
+  public JavaParserTypeSolver(File srcDir) {
+    this.srcDir = srcDir;
+  }
+
+  private String simpleName(String name) {
+    int index = name.lastIndexOf('.');
+    if (index == -1) {
+      return name;
+    } else {
+      return name.substring(index + 1);
     }
+  }
 
-    private String simpleName(String name){
-        int index = name.lastIndexOf('.');
-        if (index == -1) {
-            return name;
-        } else {
-            return name.substring(index + 1);
+  @Override
+  public SymbolReference<TypeDeclaration> tryToSolveType(String name) {
+    // TODO support internal classes
+    // TODO support enums
+    // TODO support interfaces
+    File srcFile = new File(srcDir.getAbsolutePath() + "/" + name.replaceAll("\\.", "/") + ".java");
+    if (srcFile.exists()) {
+      try {
+        CompilationUnit compilationUnit = JavaParser.parse(srcFile);
+        Optional<com.github.javaparser.ast.body.TypeDeclaration> astTypeDeclaration = Navigator.findType(compilationUnit, simpleName(name));
+        if (!astTypeDeclaration.isPresent()) {
+          return SymbolReference.unsolved(TypeDeclaration.class);
         }
+        TypeDeclaration typeDeclaration = JavaParserFacade.get(this).getTypeDeclaration(astTypeDeclaration.get());
+        return SymbolReference.solved(typeDeclaration);
+      } catch (ParseException e) {
+        throw new RuntimeException(e);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      return SymbolReference.unsolved(TypeDeclaration.class);
     }
-
-    @Override
-    public SymbolReference<TypeDeclaration> tryToSolveType(String name) {
-        // TODO support internal classes
-        // TODO support enums
-        // TODO support interfaces
-        File srcFile = new File(srcDir.getAbsolutePath() +"/"+ name.replaceAll("\\.", "/") + ".java");
-        if (srcFile.exists()) {
-            try {
-                CompilationUnit compilationUnit = JavaParser.parse(srcFile);
-                Optional<com.github.javaparser.ast.body.TypeDeclaration> astTypeDeclaration = Navigator.findType(compilationUnit, simpleName(name));
-                if (!astTypeDeclaration.isPresent()) {
-                    return SymbolReference.unsolved(TypeDeclaration.class);
-                }
-                TypeDeclaration typeDeclaration = JavaParserFacade.get(this).getTypeDeclaration(astTypeDeclaration.get());
-                return SymbolReference.solved(typeDeclaration);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return SymbolReference.unsolved(TypeDeclaration.class);
-        }
-    }
+  }
 
 }

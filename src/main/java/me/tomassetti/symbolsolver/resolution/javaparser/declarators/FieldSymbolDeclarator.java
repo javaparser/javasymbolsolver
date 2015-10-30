@@ -17,21 +17,21 @@ import java.util.List;
 public class FieldSymbolDeclarator extends AbstractSymbolDeclarator<FieldDeclaration> {
 
 
-    public FieldSymbolDeclarator(FieldDeclaration wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-    }
+  public FieldSymbolDeclarator(FieldDeclaration wrappedNode, TypeSolver typeSolver) {
+    super(wrappedNode, typeSolver);
+  }
 
-    @Override
-    public List<ValueDeclaration> getSymbolDeclarations() {
-        List<ValueDeclaration> symbols = new LinkedList<>();
-        for (VariableDeclarator v : wrappedNode.getVariables()) {
-            symbols.add(JavaParserSymbolDeclaration.field(v, typeSolver));
-        }
-        return symbols;
+  @Override
+  public List<ValueDeclaration> getSymbolDeclarations() {
+    List<ValueDeclaration> symbols = new LinkedList<>();
+    for (VariableDeclarator v : wrappedNode.getVariables()) {
+      symbols.add(JavaParserSymbolDeclaration.field(v, typeSolver));
     }
+    return symbols;
+  }
 
-    @Override
-    public List<MethodDeclaration> getMethodDeclarations() {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<MethodDeclaration> getMethodDeclarations() {
+    return Collections.emptyList();
+  }
 }

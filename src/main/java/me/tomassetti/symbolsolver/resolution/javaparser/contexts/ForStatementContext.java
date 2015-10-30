@@ -20,35 +20,35 @@ import java.util.List;
  */
 public class ForStatementContext extends AbstractJavaParserContext<ForStmt> {
 
-    public ForStatementContext(ForStmt wrappedNode) {
-        super(wrappedNode);
-    }
+  public ForStatementContext(ForStmt wrappedNode) {
+    super(wrappedNode);
+  }
 
-    @Override
-    public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
-        for (Expression expression : wrappedNode.getInit()) {
-            if (expression instanceof VariableDeclarationExpr) {
-                VariableDeclarationExpr variableDeclarationExpr = (VariableDeclarationExpr)expression;
-                for (VariableDeclarator variableDeclarator : variableDeclarationExpr.getVars()){
-                    if (variableDeclarator.getId().getName().equals(name)) {
-                        return SymbolReference.solved(JavaParserSymbolDeclaration.localVar(variableDeclarator, typeSolver));
-                    }
-                }
-            } else {
-                throw new UnsupportedOperationException(expression.getClass().getCanonicalName());
-            }
+  @Override
+  public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
+    for (Expression expression : wrappedNode.getInit()) {
+      if (expression instanceof VariableDeclarationExpr) {
+        VariableDeclarationExpr variableDeclarationExpr = (VariableDeclarationExpr) expression;
+        for (VariableDeclarator variableDeclarator : variableDeclarationExpr.getVars()) {
+          if (variableDeclarator.getId().getName().equals(name)) {
+            return SymbolReference.solved(JavaParserSymbolDeclaration.localVar(variableDeclarator, typeSolver));
+          }
         }
-
-        if (wrappedNode.getParentNode() instanceof BlockStmt) {
-            return StatementContext.solveInBlock(name, typeSolver, wrappedNode);
-        } else {
-            return getParent().solveSymbol(name, typeSolver);
-        }
-
+      } else {
+        throw new UnsupportedOperationException(expression.getClass().getCanonicalName());
+      }
     }
 
-    @Override
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
-        return getParent().solveMethod(name, parameterTypes, typeSolver);
+    if (wrappedNode.getParentNode() instanceof BlockStmt) {
+      return StatementContext.solveInBlock(name, typeSolver, wrappedNode);
+    } else {
+      return getParent().solveSymbol(name, typeSolver);
     }
+
+  }
+
+  @Override
+  public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
+    return getParent().solveMethod(name, parameterTypes, typeSolver);
+  }
 }

@@ -12,19 +12,19 @@ import java.util.Map;
  */
 public class DummyTypeSolver implements TypeSolver {
 
-    private Map<String, TypeDeclaration> declarationMap = new HashMap<>();
+  private Map<String, TypeDeclaration> declarationMap = new HashMap<>();
 
-    public void addDeclaration(String name, TypeDeclaration typeDeclaration){
-        this.declarationMap.put(name, typeDeclaration);
-    }
+  public void addDeclaration(String name, TypeDeclaration typeDeclaration) {
+    this.declarationMap.put(name, typeDeclaration);
+  }
 
-    @Override
-    public SymbolReference<TypeDeclaration> tryToSolveType(String name) {
-        if (declarationMap.containsKey(name)) {
-            return SymbolReference.solved(declarationMap.get(name));
-        } else {
-            return SymbolReference.unsolved(TypeDeclaration.class);
-        }
+  @Override
+  public SymbolReference<TypeDeclaration> tryToSolveType(String name) {
+    if (declarationMap.containsKey(name)) {
+      return SymbolReference.solved(declarationMap.get(name));
+    } else {
+      return SymbolReference.unsolved(TypeDeclaration.class);
     }
+  }
 
 }

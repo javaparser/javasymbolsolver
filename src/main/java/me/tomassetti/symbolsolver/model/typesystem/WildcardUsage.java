@@ -1,9 +1,9 @@
 package me.tomassetti.symbolsolver.model.typesystem;
 
 import com.github.javaparser.ast.type.WildcardType;
-import me.tomassetti.symbolsolver.resolution.SymbolReference;
+
 import me.tomassetti.symbolsolver.resolution.TypeSolver;
-import me.tomassetti.symbolsolver.model.declarations.MethodDeclaration;
+
 
 import java.util.Collections;
 import java.util.List;

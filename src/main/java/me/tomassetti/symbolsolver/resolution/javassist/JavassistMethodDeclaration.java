@@ -24,104 +24,104 @@ import java.util.stream.Collectors;
  * Created by federico on 01/08/15.
  */
 public class JavassistMethodDeclaration implements MethodDeclaration {
-    public JavassistMethodDeclaration(CtMethod ctMethod, TypeSolver typeSolver) {
-        this.ctMethod = ctMethod;
-        this.typeSolver = typeSolver;
+  public JavassistMethodDeclaration(CtMethod ctMethod, TypeSolver typeSolver) {
+    this.ctMethod = ctMethod;
+    this.typeSolver = typeSolver;
+  }
+
+  private CtMethod ctMethod;
+  private TypeSolver typeSolver;
+
+  @Override
+  public String toString() {
+    return "JavassistMethodDeclaration{" 
+    + "ctMethod=" + ctMethod 
+    + '}';
+  }
+
+  @Override
+  public String getName() {
+    return ctMethod.getName();
+  }
+
+  @Override
+  public boolean isField() {
+    return false;
+  }
+
+  @Override
+  public boolean isParameter() {
+    return false;
+  }
+
+  @Override
+  public boolean isVariable() {
+    return false;
+  }
+
+  @Override
+  public boolean isType() {
+    return false;
+  }
+
+  @Override
+  public TypeDeclaration declaringType() {
+    return new JavassistClassDeclaration(ctMethod.getDeclaringClass());
+  }
+
+  @Override
+  public TypeUsage getReturnType(TypeSolver typeSolver) {
+    try {
+      return JavassistFactory.typeUsageFor(ctMethod.getReturnType());
+    } catch (NotFoundException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    private CtMethod ctMethod;
-    private TypeSolver typeSolver;
 
-    @Override
-    public String toString() {
-        return "JavassistMethodDeclaration{" +
-                "ctMethod=" + ctMethod +
-                '}';
+
+  @Override
+  public int getNoParams() {
+    try {
+      return ctMethod.getParameterTypes().length;
+    } catch (NotFoundException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    @Override
-    public String getName() {
-        return ctMethod.getName();
+  @Override
+  public ParameterDeclaration getParam(int i) {
+    try {
+      return new JavassistParameterDeclaration(ctMethod.getParameterTypes()[i]);
+    } catch (NotFoundException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    @Override
-    public boolean isField() {
-        return false;
+  public MethodUsage getUsage(Node node) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public MethodUsage resolveTypeVariables(Context context, TypeSolver typeSolver, List<TypeUsage> parameterTypes) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Context getContext() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public List<TypeParameter> getTypeParameters() {
+    try {
+      if (ctMethod.getGenericSignature() == null) {
+        return Collections.emptyList();
+      }
+      SignatureAttribute.MethodSignature methodSignature = SignatureAttribute.toMethodSignature(ctMethod.getGenericSignature());
+      return Arrays.stream(methodSignature.getTypeParameters()).map(( jasTp)->new JavassistTypeParameter(jasTp, false)).collect(Collectors.toList());
+    } catch (BadBytecode badBytecode) {
+      throw new RuntimeException(badBytecode);
     }
-
-    @Override
-    public boolean isParameter() {
-        return false;
-    }
-
-    @Override
-    public boolean isVariable() {
-        return false;
-    }
-
-    @Override
-    public boolean isType() {
-        return false;
-    }
-
-    @Override
-    public TypeDeclaration declaringType() {
-        return new JavassistClassDeclaration(ctMethod.getDeclaringClass());
-    }
-
-    @Override
-    public TypeUsage getReturnType(TypeSolver typeSolver) {
-        try {
-            return JavassistFactory.typeUsageFor(ctMethod.getReturnType());
-        } catch (NotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-
-    @Override
-    public int getNoParams() {
-        try {
-            return ctMethod.getParameterTypes().length;
-        } catch (NotFoundException e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public ParameterDeclaration getParam(int i) {
-        try {
-            return new JavassistParameterDeclaration(ctMethod.getParameterTypes()[i]);
-        } catch (NotFoundException e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    public MethodUsage getUsage(Node node) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public MethodUsage resolveTypeVariables(Context context, TypeSolver typeSolver, List<TypeUsage> parameterTypes) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Context getContext() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<TypeParameter> getTypeParameters() {
-        try {
-            if (ctMethod.getGenericSignature() == null) {
-                return Collections.emptyList();
-            }
-            SignatureAttribute.MethodSignature methodSignature = SignatureAttribute.toMethodSignature(ctMethod.getGenericSignature());
-            return Arrays.stream(methodSignature.getTypeParameters()).map((jasTp)->new JavassistTypeParameter(jasTp, false)).collect(Collectors.toList());
-        } catch (BadBytecode badBytecode) {
-            throw new RuntimeException(badBytecode);
-        }
-    }
+  }
 }

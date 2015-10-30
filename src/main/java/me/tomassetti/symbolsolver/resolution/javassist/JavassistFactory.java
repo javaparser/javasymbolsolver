@@ -12,17 +12,17 @@ import me.tomassetti.symbolsolver.model.typesystem.ReferenceTypeUsage;
  */
 public class JavassistFactory {
 
-    public static TypeUsage typeUsageFor(CtClass ctClazz) {
-        try {
-            if (ctClazz.isArray()) {
-                return new ArrayTypeUsage(typeUsageFor(ctClazz.getComponentType()));
-            } else if (ctClazz.isPrimitive()) {
-                return PrimitiveTypeUsage.byName(ctClazz.getName());
-            } else {
-                return new ReferenceTypeUsage(new JavassistClassDeclaration(ctClazz));
-            }
-        } catch (NotFoundException e) {
-            throw new RuntimeException(e);
-        }
+  public static TypeUsage typeUsageFor(CtClass ctClazz) {
+    try {
+      if (ctClazz.isArray()) {
+        return new ArrayTypeUsage(typeUsageFor(ctClazz.getComponentType()));
+      } else if (ctClazz.isPrimitive()) {
+        return PrimitiveTypeUsage.byName(ctClazz.getName());
+      } else {
+        return new ReferenceTypeUsage(new JavassistClassDeclaration(ctClazz));
+      }
+    } catch (NotFoundException e) {
+      throw new RuntimeException(e);
     }
+  }
 }

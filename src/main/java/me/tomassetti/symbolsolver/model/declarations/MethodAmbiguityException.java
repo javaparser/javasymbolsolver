@@ -6,7 +6,7 @@ package me.tomassetti.symbolsolver.model.declarations;
  * @author Federico Tomassetti
  */
 public class MethodAmbiguityException extends RuntimeException {
-    public MethodAmbiguityException(String description) {
-        super(description);
-    }
+  public MethodAmbiguityException(String description) {
+    super(description);
+  }
 }

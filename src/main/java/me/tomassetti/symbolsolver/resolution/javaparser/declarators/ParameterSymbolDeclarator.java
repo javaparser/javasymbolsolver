@@ -16,19 +16,19 @@ import java.util.List;
 public class ParameterSymbolDeclarator extends AbstractSymbolDeclarator<Parameter> {
 
 
-    public ParameterSymbolDeclarator(Parameter wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-    }
+  public ParameterSymbolDeclarator(Parameter wrappedNode, TypeSolver typeSolver) {
+    super(wrappedNode, typeSolver);
+  }
 
-    @Override
-    public List<ValueDeclaration> getSymbolDeclarations() {
-        List<ValueDeclaration> symbols = new LinkedList<>();
-        symbols.add(JavaParserSymbolDeclaration.parameter(wrappedNode, typeSolver));
-        return symbols;
-    }
+  @Override
+  public List<ValueDeclaration> getSymbolDeclarations() {
+    List<ValueDeclaration> symbols = new LinkedList<>();
+    symbols.add(JavaParserSymbolDeclaration.parameter(wrappedNode, typeSolver));
+    return symbols;
+  }
 
-    @Override
-    public List<MethodDeclaration> getMethodDeclarations() {
-        return Collections.emptyList();
-    }
+  @Override
+  public List<MethodDeclaration> getMethodDeclarations() {
+    return Collections.emptyList();
+  }
 }

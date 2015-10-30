@@ -22,37 +22,37 @@ import java.util.Optional;
  */
 public class FieldAccessContext extends AbstractJavaParserContext<FieldAccessExpr> {
 
-    public FieldAccessContext(FieldAccessExpr wrappedNode) {
-        super(wrappedNode);
-    }
+  public FieldAccessContext(FieldAccessExpr wrappedNode) {
+    super(wrappedNode);
+  }
 
-    @Override
-    public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
-        return JavaParserFactory.getContext(wrappedNode.getParentNode()).solveSymbol(name, typeSolver);
-    }
+  @Override
+  public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
+    return JavaParserFactory.getContext(wrappedNode.getParentNode()).solveSymbol(name, typeSolver);
+  }
 
-    @Override
-    public SymbolReference<TypeDeclaration> solveType(String name, TypeSolver typeSolver) {
-        return JavaParserFactory.getContext(wrappedNode.getParentNode()).solveType(name, typeSolver);
-    }
+  @Override
+  public SymbolReference<TypeDeclaration> solveType(String name, TypeSolver typeSolver) {
+    return JavaParserFactory.getContext(wrappedNode.getParentNode()).solveType(name, typeSolver);
+  }
 
-    @Override
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Optional<Value> solveSymbolAsValue(String name, TypeSolver typeSolver) {
-        Expression scope = wrappedNode.getScope();
-        if (wrappedNode.getFieldExpr().toString().equals(name)) {
-            TypeUsage typeOfScope = JavaParserFacade.get(typeSolver).getType(scope);
-            if (typeOfScope.isReferenceType()) {
-                return typeOfScope.asReferenceTypeUsage().getField(name, typeSolver);
-            } else {
-                return Optional.empty();
-            }
-        } else {
-            return getParent().solveSymbolAsValue(name, typeSolver);
-        }
+  @Override
+  public Optional<Value> solveSymbolAsValue(String name, TypeSolver typeSolver) {
+    Expression scope = wrappedNode.getScope();
+    if (wrappedNode.getFieldExpr().toString().equals(name)) {
+      TypeUsage typeOfScope = JavaParserFacade.get(typeSolver).getType(scope);
+      if (typeOfScope.isReferenceType()) {
+        return typeOfScope.asReferenceTypeUsage().getField(name, typeSolver);
+      } else {
+        return Optional.empty();
+      }
+    } else {
+      return getParent().solveSymbolAsValue(name, typeSolver);
     }
+  }
 }

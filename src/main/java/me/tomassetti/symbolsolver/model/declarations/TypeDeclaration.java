@@ -17,73 +17,75 @@ import java.util.Optional;
  * @author Federico Tomassetti
  */
 public interface TypeDeclaration extends Declaration, TypeParametrized {
-    String getQualifiedName();
-    Context getContext();
+  String getQualifiedName();
+  Context getContext();
 
-    default SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
-        return getContext().solveMethod(name, parameterTypes, typeSolver);
-    }
+  default SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
+    return getContext().solveMethod(name, parameterTypes, typeSolver);
+  }
 
-    @Deprecated
-    default Optional<MethodUsage> solveMethodAsUsage(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver, Context invokationContext, List<TypeUsage> typeParameterValues) {
-        return getContext().solveMethodAsUsage(name, parameterTypes, typeSolver);
-    }
+  @Deprecated
+  default Optional<MethodUsage> solveMethodAsUsage(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver, Context invokationContext, List<TypeUsage> typeParameterValues) {
+    return getContext().solveMethodAsUsage(name, parameterTypes, typeSolver);
+  }
 
-    boolean isAssignableBy(TypeUsage typeUsage, TypeSolver typeSolver);
+  boolean isAssignableBy(TypeUsage typeUsage, TypeSolver typeSolver);
 
-    default boolean canBeAssignedTo(TypeDeclaration other, TypeSolver typeSolver) {
-        return other.isAssignableBy(this, typeSolver);
-    }
+  default boolean canBeAssignedTo(TypeDeclaration other, TypeSolver typeSolver) {
+    return other.isAssignableBy(this, typeSolver);
+  }
 
-    FieldDeclaration getField(String name, TypeSolver typeSolver);
+  FieldDeclaration getField(String name, TypeSolver typeSolver);
 
-    boolean hasField(String name, TypeSolver typeSolver);
+  boolean hasField(String name, TypeSolver typeSolver);
 
-    default boolean isAssignableBy(TypeDeclaration other, TypeSolver typeSolver) {
-        return isAssignableBy(new ReferenceTypeUsage(other), typeSolver);
-    }
+  default boolean isAssignableBy(TypeDeclaration other, TypeSolver typeSolver) {
+    return isAssignableBy(new ReferenceTypeUsage(other), typeSolver);
+  }
 
-    SymbolReference<? extends ValueDeclaration> solveSymbol(String substring, TypeSolver typeSolver);
+  SymbolReference<? extends ValueDeclaration> solveSymbol(String substring, TypeSolver typeSolver);
 
-    /**
+  /**
      * Try to solve a symbol just in the declaration, it does not delegate to the container.
      * @param substring
      * @param typeSolver
      * @return
      */
-    SymbolReference<TypeDeclaration> solveType(String substring, TypeSolver typeSolver);
+  SymbolReference<TypeDeclaration> solveType(String substring, TypeSolver typeSolver);
 
-    List<ReferenceTypeUsage> getAllAncestors(TypeSolver typeSolver);
+  List<ReferenceTypeUsage> getAllAncestors(TypeSolver typeSolver);
 
-    default boolean isClass() {
-        return false;
-    }
+  default boolean isClass() {
+    return false;
+  }
 
-    default boolean isInterface() {
-        return false;
-    }
+  default boolean isInterface() {
+    return false;
+  }
 
-    default boolean isEnum() {
-        return false;
-    }
+  default boolean isEnum() {
+    return false;
+  }
 
-    default boolean isTypeVariable() { return false; }
+  default boolean isTypeVariable() {
+    return false;
+  }
 
-    @Override
-    default boolean isType() {
-        return true;
-    }
+  @Override
+  default boolean isType() {
+    return true;
+  }
 
-    @Override
-    default TypeDeclaration asType() {
-        return this;
-    }
+  @Override
+  default TypeDeclaration asType() {
+    return this;
+  }
 
-    default ClassDeclaration asClass() {
-        throw new UnsupportedOperationException(this.getClass().getCanonicalName());
-    }
+  default ClassDeclaration asClass() {
+    throw new UnsupportedOperationException(this.getClass().getCanonicalName());
+  }
 
-    default InterfaceDeclaration asInterface() {
-        throw new UnsupportedOperationException(this.getClass().getCanonicalName());
-    }
+  default InterfaceDeclaration asInterface() {
+    throw new UnsupportedOperationException(this.getClass().getCanonicalName());
+  }
 }

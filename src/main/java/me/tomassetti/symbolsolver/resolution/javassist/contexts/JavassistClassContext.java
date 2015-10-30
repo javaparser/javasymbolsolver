@@ -21,49 +21,49 @@ import java.util.Optional;
  */
 public class JavassistClassContext implements Context {
 
-    private CtClass wrappedNode;
+  private CtClass wrappedNode;
 
-    public JavassistClassContext(CtClass wrappedNode) {
-        this.wrappedNode = wrappedNode;
-    }
+  public JavassistClassContext(CtClass wrappedNode) {
+    this.wrappedNode = wrappedNode;
+  }
 
-    @Override
-    public SymbolReference<ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public SymbolReference<ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public SymbolReference<TypeDeclaration> solveType(String name, TypeSolver typeSolver) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public SymbolReference<TypeDeclaration> solveType(String name, TypeSolver typeSolver) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Optional<TypeUsage> solveGenericType(String name, TypeSolver typeSolver) {
-        try {
-            if (wrappedNode.getGenericSignature() != null) {
-                SignatureAttribute.ClassSignature classSignature = SignatureAttribute.toClassSignature(wrappedNode.getGenericSignature());
-                for (SignatureAttribute.TypeParameter tp : classSignature.getParameters()) {
-                    if (tp.getName().equals(name)) {
-                        throw new UnsupportedOperationException();
-                        //OK, ora bisognerebbe capire come prendere il valore corrispondente
-                    }
-                }
-            }
-        } catch (BadBytecode bb) {
-            throw new RuntimeException(bb);
+  @Override
+  public Optional<TypeUsage> solveGenericType(String name, TypeSolver typeSolver) {
+    try {
+      if (wrappedNode.getGenericSignature() != null) {
+        SignatureAttribute.ClassSignature classSignature = SignatureAttribute.toClassSignature(wrappedNode.getGenericSignature());
+        for (SignatureAttribute.TypeParameter tp : classSignature.getParameters()) {
+          if (tp.getName().equals(name)) {
+            throw new UnsupportedOperationException();
+            //OK, ora bisognerebbe capire come prendere il valore corrispondente
+          }
         }
-        return Optional.empty();
-        //throw new UnsupportedOperationException("TO be implemented");
+      }
+    } catch (BadBytecode bb) {
+      throw new RuntimeException(bb);
     }
+    return Optional.empty();
+    //throw new UnsupportedOperationException("TO be implemented");
+  }
 
-    @Override
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public SymbolReference<MethodDeclaration> solveMethod(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Context getParent() {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public Context getParent() {
+    throw new UnsupportedOperationException();
+  }
 
 }
