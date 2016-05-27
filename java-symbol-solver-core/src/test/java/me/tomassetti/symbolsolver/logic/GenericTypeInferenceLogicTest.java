@@ -34,7 +34,7 @@ public class GenericTypeInferenceLogicTest {
         EasyMock.replay(a);
         TypeParameterUsage aUsage = new TypeParameterUsage(a);
         assertEquals(ImmutableMap.of("A", string), GenericTypeInferenceLogic.inferGenericTypes(
-                ImmutableList.of(new Tuple2<TypeUsage, TypeUsage>(aUsage, string))));
+                ImmutableList.of(new Tuple2<>(aUsage, string))));
     }
 
     @Test
@@ -55,9 +55,9 @@ public class GenericTypeInferenceLogicTest {
         TypeParameterUsage bUsage = new TypeParameterUsage(b);
         TypeParameterUsage cUsage = new TypeParameterUsage(c);
         assertEquals(ImmutableMap.of("A", string, "B", object, "C", string), GenericTypeInferenceLogic.inferGenericTypes(
-                ImmutableList.of(new Tuple2<TypeUsage, TypeUsage>(aUsage, string),
-                        new Tuple2<TypeUsage, TypeUsage>(bUsage, object),
-                        new Tuple2<TypeUsage, TypeUsage>(cUsage, string))));
+                ImmutableList.of(new Tuple2<>(aUsage, string),
+                        new Tuple2<>(bUsage, object),
+                        new Tuple2<>(cUsage, string))));
     }
 
     @Test
@@ -66,8 +66,8 @@ public class GenericTypeInferenceLogicTest {
         ReferenceTypeUsage string = new ReferenceTypeUsageImpl(new ReflectionClassDeclaration(String.class, typeSolver), typeSolver);
         ReferenceTypeUsage object = new ReferenceTypeUsageImpl(new ReflectionClassDeclaration(Object.class, typeSolver), typeSolver);
         assertEquals(Collections.emptyMap(), GenericTypeInferenceLogic.inferGenericTypes(
-                ImmutableList.of(new Tuple2<TypeUsage, TypeUsage>(object, string),
-                        new Tuple2<TypeUsage, TypeUsage>(object, object),
-                        new Tuple2<TypeUsage, TypeUsage>(object, string))));
+                ImmutableList.of(new Tuple2<>(object, string),
+                        new Tuple2<>(object, object),
+                        new Tuple2<>(object, string))));
     }
 }
