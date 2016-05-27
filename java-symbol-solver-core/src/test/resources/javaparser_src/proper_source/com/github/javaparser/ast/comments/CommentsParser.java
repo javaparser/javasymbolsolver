@@ -95,12 +95,14 @@ public class CommentsParser {
                     break;
                 case IN_LINE_COMMENT:
                     if (c=='\n' || c=='\r'){
-                        currentLineComment.setContent(currentContent.toString());
+                        currentLineComment.setContent(currentContent == null ? "" : currentContent.toString());
                         currentLineComment.setEndLine(currLine);
                         currentLineComment.setEndColumn(currCol);
                         comments.addComment(currentLineComment);
                         state = State.CODE;
                     } else {
+                        if (currentContent == null)
+                            currentContent = new StringBuffer();
                         currentContent.append(c);
                     }
                     break;
@@ -126,6 +128,8 @@ public class CommentsParser {
                         }
                         state = State.CODE;
                     } else {
+                        if (currentContent == null)
+                            currentContent = new StringBuffer();
                         currentContent.append(c=='\r'?'\n':c);
                     }
                     break;
@@ -159,7 +163,7 @@ public class CommentsParser {
         }
 
         if (state==State.IN_LINE_COMMENT){
-            currentLineComment.setContent(currentContent.toString());
+            currentLineComment.setContent(currentContent == null ? "" : currentContent.toString());
             currentLineComment.setEndLine(currLine);
             currentLineComment.setEndColumn(currCol);
             comments.addComment(currentLineComment);
