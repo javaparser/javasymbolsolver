@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 public class PrintExpressionType {
 
 
+    private PrintExpressionType() {
+    }
 
     static class TypeCalculatorVisitor extends VoidVisitorAdapter<JavaParserFacade> {
         @Override

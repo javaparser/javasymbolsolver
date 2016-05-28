@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 public class MethodResolutionLogic {
 
+    private MethodResolutionLogic() {
+    }
+
     private static List<TypeUsage> groupVariadicParamValues(List<TypeUsage> paramTypes, int startVariadic, TypeUsage variadicType) {
         List<TypeUsage> res = new ArrayList<>(paramTypes.subList(0, startVariadic));
         List<TypeUsage> variadicValues = paramTypes.subList(startVariadic, paramTypes.size());

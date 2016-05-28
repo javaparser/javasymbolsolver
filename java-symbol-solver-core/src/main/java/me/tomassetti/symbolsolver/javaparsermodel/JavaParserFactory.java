@@ -19,6 +19,9 @@ import me.tomassetti.symbolsolver.javaparsermodel.declarators.VariableSymbolDecl
 
 public class JavaParserFactory {
 
+    private JavaParserFactory() {
+    }
+
     public static Context getContext(Node node, TypeSolver typeSolver) {
         if (node == null) {
             return null;

@@ -10,6 +10,9 @@ import java.util.Map;
 
 public class GenericTypeInferenceLogic {
 
+    private GenericTypeInferenceLogic() {
+    }
+
     public static Map<String, TypeUsage> inferGenericTypes(List<Tuple2<TypeUsage, TypeUsage>> formalActualTypePairs) {
         Map<String, TypeUsage> map = new HashMap<>();
 
