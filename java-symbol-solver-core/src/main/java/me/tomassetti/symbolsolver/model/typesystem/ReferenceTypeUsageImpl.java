@@ -5,6 +5,7 @@ import me.tomassetti.symbolsolver.model.declarations.TypeDeclaration;
 import me.tomassetti.symbolsolver.model.invokations.MethodUsage;
 import me.tomassetti.symbolsolver.model.resolution.TypeParameter;
 import me.tomassetti.symbolsolver.model.resolution.TypeSolver;
+import me.tomassetti.symbolsolver.reflectionmodel.ReflectionClassDeclaration;
 import me.tomassetti.symbolsolver.javaparsermodel.LambdaArgumentTypeUsagePlaceholder;
 import me.tomassetti.symbolsolver.javaparsermodel.declarations.JavaParserTypeVariableDeclaration;
 
@@ -34,6 +35,12 @@ public class ReferenceTypeUsageImpl extends ReferenceTypeUsage {
 
     public ReferenceTypeUsageImpl(TypeDeclaration typeDeclaration, List<TypeUsage> typeParameters, TypeSolver typeSolver) {
         super(typeDeclaration, typeParameters, typeSolver);
+        if (!typeDeclaration.getTypeParameters().isEmpty() && typeParameters.isEmpty()) {
+            // add object type usages as type parameters if this is a raw type
+            for (int i = 0; i < typeDeclaration.getTypeParameters().size(); i++) {
+                super.typeParameters.add(new ReferenceTypeUsageImpl(new ReflectionClassDeclaration(Object.class, typeSolver), typeSolver));
+            }
+        }
     }
 
     @Override

@@ -299,6 +299,8 @@ public abstract class ReferenceTypeUsage implements TypeUsage {
                             // ok
                         } else if (thisParamAsWildcard.isExtends() && thisParamAsWildcard.getBoundedType().isAssignableBy(otherParam)) {
                             // ok
+                        } else if (otherParam.describe().equals("java.lang.Object")) {
+                            // ok
                         } else {
                             return false;
                         }
