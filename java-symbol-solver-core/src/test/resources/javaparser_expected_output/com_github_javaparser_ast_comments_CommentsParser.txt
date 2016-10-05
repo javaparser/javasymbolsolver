@@ -12,7 +12,7 @@
   Line 51) CommentsCollection comments = new CommentsCollection() ==> com.github.javaparser.ast.comments.CommentsCollection
   Line 51) new CommentsCollection() ==> com.github.javaparser.ast.comments.CommentsCollection
   Line 52) int r ==> int
-  Line 54) Deque prevTwoChars = new LinkedList<Character>(Arrays.asList('z', 'z')) ==> java.util.Deque
+  Line 54) Deque prevTwoChars = new LinkedList<Character>(Arrays.asList('z', 'z')) ==> java.util.Deque<java.lang.Object>
   Line 54) new LinkedList<Character>(Arrays.asList('z', 'z')) ==> java.util.LinkedList<java.lang.Character>
   Line 56) State state = State.CODE ==> com.github.javaparser.ast.comments.CommentsParser.State
   Line 56) State.CODE ==> com.github.javaparser.ast.comments.CommentsParser.State
