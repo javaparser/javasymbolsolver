@@ -261,8 +261,8 @@ public class JavaParserFacade {
                             TypeUsage formalType = functionalMethod.get().returnType();
                             formalActualTypePairs.add(new Tuple2<>(formalType, actualType));
                             Map<String, TypeUsage> inferredTypes = GenericTypeInferenceLogic.inferGenericTypes(formalActualTypePairs);
-                            for (String typeName : inferredTypes.keySet()) {
-                                result = result.replaceParam(typeName, inferredTypes.get(typeName));
+                            for (Map.Entry<String, TypeUsage> entry : inferredTypes.entrySet()) {
+                                result = result.replaceParam(entry.getKey(), entry.getValue());
                             }
                         } else {
                             throw new UnsupportedOperationException();

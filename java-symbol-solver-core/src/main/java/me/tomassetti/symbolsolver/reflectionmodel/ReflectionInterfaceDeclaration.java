@@ -115,11 +115,11 @@ public class ReflectionInterfaceDeclaration extends AbstractTypeDeclaration impl
                 i++;
             }
             Map<String, TypeUsage> map = GenericTypeInferenceLogic.inferGenericTypes(formalActualTypePairs);
-            for (String key : map.keySet()) {
-                if (map.get(key) == null) {
+            for (Map.Entry<String, TypeUsage> entry : map.entrySet()) {
+                if (entry.getValue() == null) {
                     throw new IllegalArgumentException();
                 }
-                methodUsage = methodUsage.replaceNameParam(key, map.get(key));
+                methodUsage = methodUsage.replaceNameParam(entry.getKey(), entry.getValue());
             }
             return Optional.of(methodUsage);
         } else {

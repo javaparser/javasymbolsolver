@@ -78,8 +78,8 @@ public class MethodCallExprContext extends AbstractJavaParserContext<MethodCallE
             TypeUsage actualType = actualParamTypes.get(i);
             matchTypeParameters(expectedType, actualType, matchedTypeParameters);
         }
-        for (String tp : matchedTypeParameters.keySet()) {
-            methodUsage = methodUsage.replaceNameParam(tp, matchedTypeParameters.get(tp));
+        for (Map.Entry<String, TypeUsage> entry : matchedTypeParameters.entrySet()) {
+            methodUsage = methodUsage.replaceNameParam(entry.getKey(), entry.getValue());
         }
         return methodUsage;
     }
