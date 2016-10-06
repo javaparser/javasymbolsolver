@@ -6,6 +6,9 @@ import me.tomassetti.symbolsolver.model.typesystem.*;
 import java.lang.reflect.*;
 
 public class ReflectionFactory {
+    private ReflectionFactory() {
+    }
+
     public static TypeUsage typeUsageFor(Class<?> clazz, TypeSolver typeSolver) {
         if (clazz.isArray()) {
             return new ArrayTypeUsage(typeUsageFor(clazz.getComponentType(), typeSolver));

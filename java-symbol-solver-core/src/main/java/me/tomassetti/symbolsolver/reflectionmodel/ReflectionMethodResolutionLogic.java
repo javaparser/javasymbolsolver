@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
 
 class ReflectionMethodResolutionLogic {
 
+    private ReflectionMethodResolutionLogic() {
+    }
+
     static Optional<MethodUsage> solveMethodAsUsage(String name, List<TypeUsage> parameterTypes, TypeSolver typeSolver,
                                                     Context invokationContext, List<TypeUsage> typeParameterValues,
                                                     TypeParametrized typeParametrized, Class clazz) {

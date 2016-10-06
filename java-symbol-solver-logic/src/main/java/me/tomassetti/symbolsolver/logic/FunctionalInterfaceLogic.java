@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 public class FunctionalInterfaceLogic {
 
+    private FunctionalInterfaceLogic() {
+    }
+
     public static Optional<MethodUsage> getFunctionalMethod(TypeUsage type) {
         if (type.isReferenceType() && type.asReferenceTypeUsage().getTypeDeclaration().isInterface()) {
             //We need to find all abstract methods

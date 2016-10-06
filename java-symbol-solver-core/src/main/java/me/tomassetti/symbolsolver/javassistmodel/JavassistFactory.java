@@ -12,6 +12,9 @@ import me.tomassetti.symbolsolver.model.resolution.TypeSolver;
 
 public class JavassistFactory {
 
+    private JavassistFactory() {
+    }
+
     public static TypeUsage typeUsageFor(CtClass ctClazz, TypeSolver typeSolver) {
         try {
             if (ctClazz.isArray()) {
