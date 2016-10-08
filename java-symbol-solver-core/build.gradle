@@ -17,3 +17,10 @@ idea {
         excludeDirs += file('src/test/resources/javaparser_src')
     }
 }
+
+plugins {
+    id 'net.saliman.cobertura' version '2.3.1'
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+}
+
+cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
