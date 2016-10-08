@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/ftomassetti/java-symbol-solver.svg?branch=master)](https://travis-ci.org/ftomassetti/java-symbol-solver)
 
+[![Coverage Status](https://coveralls.io/repos/github/ftomassetti/java-symbol-solver/badge.svg?branch=master)](https://coveralls.io/github/ftomassetti/java-symbol-solver?branch=master)
+
 A Symbol Solver for Java built on top of [JavaParser](https://github.com/javaparser/javaparser/).
 
 ## What can you use a Symbol Solver for?
