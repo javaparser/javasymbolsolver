@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.github.javaparser</groupId>
         <artifactId>java-symbol-solver-parent</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.4.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -60,12 +60,12 @@
         <dependency>
             <groupId>com.github.javaparser</groupId>
             <artifactId>java-symbol-solver-model</artifactId>
-            <version>0.4-SNAPSHOT</version>
+            <version>0.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.javaparser</groupId>
             <artifactId>java-symbol-solver-logic</artifactId>
-            <version>0.4-SNAPSHOT</version>
+            <version>0.4.0</version>
         </dependency>
         <dependency>
             <groupId>io.javaslang</groupId>
