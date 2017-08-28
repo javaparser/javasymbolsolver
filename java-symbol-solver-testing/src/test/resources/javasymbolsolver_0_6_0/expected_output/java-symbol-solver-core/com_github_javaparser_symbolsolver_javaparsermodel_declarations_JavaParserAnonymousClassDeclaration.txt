@@ -44,7 +44,7 @@
   Line 111) findMembersOfKind(com.github.javaparser.ast.body.FieldDeclaration.class).stream() ==> java.util.Collection.stream()
   Line 111) findMembersOfKind(com.github.javaparser.ast.body.FieldDeclaration.class) ==> com.github.javaparser.symbolsolver.javaparsermodel.declarations.JavaParserAnonymousClassDeclaration.findMembersOfKind(java.lang.Class<T>)
   Line 114) field.getVariables().stream().map(variable -> new JavaParserFieldDeclaration(variable, typeSolver)) ==> ERROR
-  Line 114) field.getVariables().stream() ==> ERROR
+  Line 114) field.getVariables().stream() ==> java.util.Collection.stream()
   Line 114) field.getVariables() ==> com.github.javaparser.ast.body.FieldDeclaration.getVariables()
   Line 117) Collectors.toList() ==> java.util.stream.Collectors.toList()
   Line 120) getSuperClass().getTypeDeclaration().getAllFields() ==> com.github.javaparser.symbolsolver.model.declarations.ReferenceTypeDeclaration.getAllFields()

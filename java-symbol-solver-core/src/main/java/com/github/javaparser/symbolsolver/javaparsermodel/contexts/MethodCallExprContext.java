@@ -63,11 +63,11 @@ public class MethodCallExprContext extends AbstractJavaParserContext<MethodCallE
     public Optional<Type> solveGenericType(String name, TypeSolver typeSolver) {
         if(wrappedNode.getScope().isPresent()){
             Type typeOfScope = JavaParserFacade.get(typeSolver).getType(wrappedNode.getScope().get());
-            Optional<Type> res = typeOfScope.asReferenceType().getGenericParameterByName(name);
-            return res;
-        } else{
-            return Optional.empty();
+            if (typeOfScope.isReferenceType()) {
+                return typeOfScope.asReferenceType().getGenericParameterByName(name);
+            }
         }
+        return Optional.empty();
     }
 
     @Override
