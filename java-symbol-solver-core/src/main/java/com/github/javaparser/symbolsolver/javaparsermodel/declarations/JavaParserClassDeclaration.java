@@ -175,7 +175,11 @@ public class JavaParserClassDeclaration extends AbstractClassDeclaration {
         List<ReferenceType> interfaces = new ArrayList<>();
         if (wrappedNode.getImplementedTypes() != null) {
             for (ClassOrInterfaceType t : wrappedNode.getImplementedTypes()) {
-                interfaces.add(toReferenceType(t));
+                try {
+                    interfaces.add(toReferenceType(t));
+                } catch (UnsolvedSymbolException e) {
+                    // Just ignore
+                }
             }
         }
         return interfaces;
@@ -299,8 +303,12 @@ public class JavaParserClassDeclaration extends AbstractClassDeclaration {
         }
         if (wrappedNode.getImplementedTypes() != null) {
             for (ClassOrInterfaceType implemented : wrappedNode.getImplementedTypes()) {
-                ReferenceType ancestor = toReferenceType(implemented);
-                ancestors.add(ancestor);
+                try {
+                    ReferenceType ancestor = toReferenceType(implemented);
+                    ancestors.add(ancestor);
+                } catch (UnsolvedSymbolException e) {
+                    // Ignore
+                }
             }
         }
         return ancestors;
