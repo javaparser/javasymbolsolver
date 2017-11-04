@@ -25,7 +25,17 @@ jacocoTestReport {
 }
 
 def javassistSymbolsResources = "$projectDir/src/test/resources/javassist_symbols"
+
+/**
+ * Define the various test-jar sources we'll need. The following properties have to be defined:
+ *  - name: String indicating both the name of the folder under the root {@see javassistSymbolsResources} and the name of the jar itself
+ *  - taskNameSuffix: String used to name the various tasks configured for this jar
+ *  - classPath: Array of absolute paths to jars that should be added to the classpath during compilation
+ *  - compileTaskDependencies: Array of tasks which the compile task will depend on
+ *  - buildTaskDependencies: Array of tasks which the jar-building task will depend on
+ */
 def jars = [
+    [name: "assignability", taskNameSuffix: "JavassistAssignability", classPath: ["$javassistSymbolsResources/included_jar/included_jar.jar"], compileTaskDependencies: ["compileTestJarIncludedJar", "buildTestJarIncludedJar"], buildTaskDependencies: []],
     [name: "excluded_jar", taskNameSuffix: "ExcludedJar", classPath: [], compileTaskDependencies: [], buildTaskDependencies: []],
     [name: "included_jar", taskNameSuffix: "IncludedJar", classPath: [], compileTaskDependencies: [], buildTaskDependencies: []],
     [
@@ -37,11 +47,15 @@ def jars = [
     ]
 ]
 
+/**
+ * Will configure a compile and build task for each of the jars defined in `jars`.
+ */
 jars.each { jarToBuild ->
     def fullDir = "$javassistSymbolsResources/${jarToBuild.name}";
     task "compileTestJar${jarToBuild.taskNameSuffix}" (type: JavaCompile, dependsOn: jarToBuild.compileTaskDependencies) {
         destinationDir = new File("$fullDir/result")
         source = "$fullDir/src"
+        // Usage of project.files and the "${->cp}" syntax here is to ensure lazy evaluation of these references, as the jars may the result of other tasks
         classpath = project.files(jarToBuild.classPath.each {cp -> "${->cp}"}, {
             builtBy jarToBuild.compileTaskDependencies
         })
@@ -57,4 +71,5 @@ jars.each { jarToBuild ->
     }
 }
 
-assemble.dependsOn buildTestJarMainJar
+// Add extra dependencies to the built-in assemble task
+assemble.dependsOn buildTestJarMainJar, buildTestJarJavassistAssignability

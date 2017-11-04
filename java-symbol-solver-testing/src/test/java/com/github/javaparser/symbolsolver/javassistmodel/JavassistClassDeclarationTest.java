@@ -16,9 +16,11 @@
 
 package com.github.javaparser.symbolsolver.javassistmodel;
 
+import com.github.javaparser.resolution.declarations.ResolvedReferenceTypeDeclaration;
 import com.github.javaparser.resolution.types.ResolvedReferenceType;
 import com.github.javaparser.symbolsolver.AbstractTest;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
+import com.github.javaparser.symbolsolver.model.typesystem.NullType;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
@@ -27,15 +29,31 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class JavassistClassDeclarationTest extends AbstractTest {
 
     private TypeSolver typeSolver;
 
     private TypeSolver newTypeSolver;
+
+    private JavassistClassDeclaration childClassADeclaration;
+    private JavassistClassDeclaration childClassCNoInterfacesDeclaration;
+    private JavassistClassDeclaration standaloneClassADeclaration;
+    private JavassistClassDeclaration childWithTiesToDifferentJarDeclaration;
+    private ResolvedReferenceTypeDeclaration childClassBDeclaration;
+    private ResolvedReferenceTypeDeclaration superClassADeclaration;
+    private ResolvedReferenceTypeDeclaration superClassBDeclaration;
+    private ResolvedReferenceTypeDeclaration objectDeclaration;
+    private ResolvedReferenceTypeDeclaration interfaceADeclaration;
+    private ResolvedReferenceTypeDeclaration interfaceBDeclaration;
+    private ResolvedReferenceTypeDeclaration interfaceCDeclaration;
+    private ResolvedReferenceTypeDeclaration interfaceIncludedJarDeclaration;
+    private ResolvedReferenceTypeDeclaration superClassIncludedJarDeclaration;
 
     @Before
     public void setup() throws IOException {
@@ -44,6 +62,25 @@ public class JavassistClassDeclarationTest extends AbstractTest {
 
         String newPathToJar = adaptPath("src/test/resources/javaparser-core-3.0.0-alpha.2.jar");
         newTypeSolver = new CombinedTypeSolver(new JarTypeSolver(newPathToJar), new ReflectionTypeSolver());
+
+        final String pathToAssignabilityJar = adaptPath("src/test/resources/javassist_symbols/assignability/assignability.jar");
+        final String pathToIncludedJar = adaptPath("src/test/resources/javassist_symbols/included_jar/included_jar.jar");
+        final TypeSolver assignabilityTypeSolver = new CombinedTypeSolver(new JarTypeSolver(pathToIncludedJar), new JarTypeSolver(pathToAssignabilityJar), new ReflectionTypeSolver());
+        final String assignabilityPackageRoot = "com.github.javaparser.javasymbolsolver.javassist_assignability_testdata.";
+        final String includedJarPackageRoot = "com.github.javaparser.javasymbolsolver.javassist_symbols.included_jar.";
+        this.childClassADeclaration = (JavassistClassDeclaration) assignabilityTypeSolver.solveType(assignabilityPackageRoot + "ChildClassA");
+        this.childClassCNoInterfacesDeclaration = (JavassistClassDeclaration) assignabilityTypeSolver.solveType(assignabilityPackageRoot + "ChildClassCNoInterfaces");
+        this.standaloneClassADeclaration = (JavassistClassDeclaration) assignabilityTypeSolver.solveType(assignabilityPackageRoot + "StandaloneClassA");
+        this.childWithTiesToDifferentJarDeclaration = (JavassistClassDeclaration) assignabilityTypeSolver.solveType(assignabilityPackageRoot + "ChildWithTiesToDifferentJar");
+        this.childClassBDeclaration = assignabilityTypeSolver.solveType(assignabilityPackageRoot + "ChildClassB");
+        this.superClassADeclaration = assignabilityTypeSolver.solveType(assignabilityPackageRoot + "SuperClassA");
+        this.superClassBDeclaration = assignabilityTypeSolver.solveType(assignabilityPackageRoot + "SuperClassB");
+        this.objectDeclaration = assignabilityTypeSolver.solveType("java.lang.Object");
+        this.interfaceADeclaration = assignabilityTypeSolver.solveType(assignabilityPackageRoot + "InterfaceA");
+        this.interfaceBDeclaration = assignabilityTypeSolver.solveType(assignabilityPackageRoot + "InterfaceB");
+        this.interfaceCDeclaration = assignabilityTypeSolver.solveType(assignabilityPackageRoot + "InterfaceC");
+        this.interfaceIncludedJarDeclaration = assignabilityTypeSolver.solveType(includedJarPackageRoot + "InterfaceIncludedJar");
+        this.superClassIncludedJarDeclaration = assignabilityTypeSolver.solveType(includedJarPackageRoot + "SuperClassIncludedJar");
     }
 
     ///
@@ -400,5 +437,57 @@ public class JavassistClassDeclarationTest extends AbstractTest {
         assertEquals("com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt", ancestor.getQualifiedName());
         assertEquals("com.github.javaparser.ast.body.ConstructorDeclaration", ancestor.typeParametersMap().getValueBySignature("com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt.T").get().asReferenceType().getQualifiedName());
     }
-    
+
+    @Test
+    public void testIsAssignableBy() {
+        //Siblings
+        assertTrue("Should be assignable by self", this.childClassADeclaration.isAssignableBy(this.childClassADeclaration));
+        //ChildClassB implements interfaces, so JavassistInterfaceDeclaration.isAssignableBy should be triggered, which should throw an unsupportedOperationException.
+        assertExceptionMissingImplementationInterfaceDeclaration((v) -> this.childClassADeclaration.isAssignableBy(this.childClassBDeclaration)); // FIXME Should in reality return false, Shouldn't be assignable by sibling
+        assertFalse("Shouldn't be assignable by sibling", this.childClassCNoInterfacesDeclaration.isAssignableBy(this.childClassBDeclaration));
+        assertFalse("Shouldn't be assignable by sibling", this.standaloneClassADeclaration.isAssignableBy(this.childClassBDeclaration));
+
+        //Superclasses
+        assertTrue("Should be assignable by direct superclass", this.childClassADeclaration.isAssignableBy(this.superClassADeclaration));
+        assertTrue("Should be assignable by implicit superclass.", this.childClassADeclaration.isAssignableBy(this.objectDeclaration));
+        assertTrue("Should be assignable by indirect superclass, one level removed", this.childClassADeclaration.isAssignableBy(this.superClassBDeclaration));
+
+        //Interfaces
+        assertExceptionMissingImplementationInterfaceDeclaration((v) -> this.childClassADeclaration.isAssignableBy(this.interfaceADeclaration)); // FIXME Should in reality return true, Should be assignable by first direct interface
+        assertExceptionMissingImplementationInterfaceDeclaration((v) -> this.childClassADeclaration.isAssignableBy(this.interfaceBDeclaration)); // FIXME Should in reality return true, Should be assignable by second direct interface
+        assertExceptionMissingImplementationInterfaceDeclaration((v) -> this.childClassADeclaration.isAssignableBy(this.interfaceCDeclaration)); // FIXME Should in reality return true, Should be assignable by indirect interface
+
+        //Superclass in a different jar
+        assertExceptionJavassistNotFound((v) -> this.childWithTiesToDifferentJarDeclaration.isAssignableBy(this.superClassIncludedJarDeclaration), this.superClassIncludedJarDeclaration.getQualifiedName()); // FIXME Should in reality return true, Should be assignable by superclass in different jar
+
+        //Interface in a different jar
+        // This fails on finding the superclass, because that is evaluated first and is in a different jar
+        assertExceptionJavassistNotFound((v) -> this.childWithTiesToDifferentJarDeclaration.isAssignableBy(this.interfaceIncludedJarDeclaration), this.superClassIncludedJarDeclaration.getQualifiedName()); // FIXME Should in reality return true, Should be assignable by interface in different jar
+
+        //Special cases
+        assertTrue("Should be assignable by null", this.childClassADeclaration.isAssignableBy(NullType.INSTANCE));
+
+        //TODO Should test functional interfaces
+        //TODO Should test generics
+    }
+
+    private void assertExceptionJavassistNotFound(final Consumer<Void> exceptionProducer, final String missingFQN) {
+        assertException("Exception expected for now because of incorrect relience on ctClass.getSuperclass()/ctClass.getInterfaces() which cannot access classes from other typesolvers.",
+                RuntimeException.class, "javassist.NotFoundException: " + missingFQN, exceptionProducer);
+    }
+
+    private void assertExceptionMissingImplementationInterfaceDeclaration(final Consumer<Void> exceptionProducer) {
+        assertException("Exception expected for now because of missing implementation in JavassistInterfaceDeclaration", UnsupportedOperationException.class, null, exceptionProducer);
+    }
+
+    private void assertException(final String failureMessage, final Class<? extends Exception> expectedExceptionType, final String expectedExceptionMessage, Consumer<Void> exceptionProducer) {
+        try {
+            exceptionProducer.accept(null);
+        } catch (Exception e) {
+            assertTrue(e.getClass().isAssignableFrom(expectedExceptionType));
+            assertEquals(expectedExceptionMessage, e.getMessage());
+            return;
+        }
+        fail(Objects.nonNull(failureMessage) ? failureMessage : "Expected exception, but got none");
+    }
 }
