@@ -1,3 +1,7 @@
+**JavaSymbolSolver has been integrated in [JavaParser](https://github.com/javaparser/javaparser): development will continue there!**
+
+**We will work on current issues opened here, but all new issues should be opened in the JavaParser project**
+
 # JavaSymbolSolver
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.javaparser/java-symbol-solver-core.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.javaparser%22%20AND%20a%3A%22java-symbol-solver-core%22)
