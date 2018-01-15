@@ -8,6 +8,7 @@ buildscript {
 plugins {
   id 'net.saliman.cobertura' version '2.3.1'
   id 'com.github.kt3k.coveralls' version '2.6.3'
+  id "com.github.hierynomus.license" version "0.14.0"
 }
 
 def jssVersion = '0.6.4-SNAPSHOT'
@@ -24,6 +25,7 @@ allprojects  {
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'jacoco'
+  apply plugin: "com.github.hierynomus.license"
 
   group = 'com.github.javaparser'
   version = jssVersion
@@ -34,8 +36,13 @@ allprojects  {
     maven { url "http://repo.maven.apache.org/maven2" }
   }
 
-  apply plugin: 'java'
 
+  license {
+    header rootProject.file('license_header.txt')    
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    ext.name = 'The JavaParser Team'
+    exclude(["**/resources/**"])
+  }
 }
 
 subprojects {
